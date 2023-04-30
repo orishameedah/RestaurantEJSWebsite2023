@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css">
+     <!-- font awesome headercdn link -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+     <!-- custom css file link -->
+     <link rel="stylesheet" href="../css/style.css"/>
+     <link rel="icon" href="../images/utensils-solid (1).svg"/>
+</head>
+<body>
+        <!-- header section start -->
+            <section class="header">
+                <a href="/" class="logo"><i class="fas fa-utensils"></i>food.</a>
+                <nav class="navbar">
+                    <a href="/admin">Admin</a>
+                </nav>
+        
+                <div id="menu-btn" class="fas fa-bars"></div>
+            </section>
+        <!-- header section end -->
+
+    <div class="menuform">
+        <h1 class="menu-title">Add Menu</h1>
+        <div class="addmenu">
+            <!-- <% if(message){ %>
+                <div class="alert alert-dismissible fade show alert-<%= message.type %>" role="alert">
+                    <strong><%= message.message %></strong>
+                </div>
+            <% } %>     -->
+            <form action="/addmenu" method="post" class="formmenu" enctype="multipart/form-data">
+                    <div class="input-group w50">
+                        <label for="name">Food Name</label>
+                        <input type="name" name="name" class="input-control" placeholder="Food Name"/>
+                    </div>
+
+                    <div class="input-group w50">
+                        <label for="desc">Food Description</label>
+                        <textarea name="desc" id="desc" cols="30" rows="4" placeholder="Description" class="input-control"></textarea>
+                    </div>
+
+                    <div class="input-group w50">
+                        <label for="price">Food Price</label>
+                        <input type="price" class="input-control" name="price" placeholder="Food Price"/>
+                    </div>    
+
+                    <div class="input-group row">
+                        <label for="category">Select Category</label>
+                        <select class="input-control" name="category" aria-label="category">
+                            <option selected>Select Category</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                            <option value="Drinks">Drinks</option>
+                            <option value="Dessert">Dessert</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="image">Food Image</label>
+                        <input type="file" name="image" class="input-control" />
+                    </div>
+
+                    <div class="input-group">
+                        <button type="submit" class="btn-1">Submit Menu</button>
+                    </div>
+       
+            </form>
+        </div>
+    </div>
+
+            <!-- custom js -->
+            <script src="js/admin-script.js"></script>
+</body>
+</html>

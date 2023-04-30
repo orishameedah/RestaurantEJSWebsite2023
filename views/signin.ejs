@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("layout/header") %>
+<body>
+
+   <div class="auth-container">
+        <form action="/signin" method="post" class="padd-15">
+            <h1>This page is only for admin</h1>
+            <h1>Welcome Admin !! Login To Your Admin Dashboard</h1>
+            <div class="auth-items ">
+                <% if(message){ %>
+                    <div class="alert alert-dismissible fade show alert-<%= message.type %>" role="alert">
+                       <strong><%= message.message %></strong>
+                    </div>
+                <% } %> 
+                    <div class="form-item col-6 padd-15">
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-item col-6 padd-15">
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 padd-15">
+                            <button type="submit" class="btn">Login</button>
+                        </div>
+                    </div>    
+                    <a href="/signup" 
+                    style =
+                    "color: var(--black);
+                    font-size: 12px;
+                    text-align: center;
+                    justify-items: center;
+                    text-decoration: none;
+                    margin-top: 8px;"
+                    >Click here to register</a>          
+            </div>
+        </form>
+    </div>
+</body>
+</html>

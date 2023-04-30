@@ -1,0 +1,368 @@
+firstly - Copy the restaurant-website2022 entire folder into local disk (c:/)
+- and then rename it to restaurant-website-ejs2023
+-let create a package.json file for purpose to install dependencies or third library like this
+C:\restaurant-website-Ejs2023>npm init
+Backend Technology
+- Nodejs (backend)
+
+Frontend Libraries
+- Bootstrap 5 (styling)
+- Datatable (pagination, sorting, e.t.c)
+- Fontawesome (icons)
+
+Database Technology
+Mongodb 
+
+Backend Packages or Third Party Library
+- Express Js (framework based on Nodejs)
+- Mongoose (Object Date Modelling (DOM) library)
+- EJS (Embedded Javascript Templating Engine)
+- Express session (storing session message)
+- Dotenv (for loading environment variables from .env file)
+- Nodemon (monitoring the backend server)
+
+- Now let install the dependencies that is needed for the development of our application
+C:\restaurant-website-Ejs2023>npm i ejs@3.1.6 dotenv@8.2.0 express-session@1.17.1 multer@1.4.4-lts.1 express@4.17.1 mongoose@5.11.15 express-ejs-layouts
+
+- Let's start coding 
+- create index.js file to setup the backend server in the root folder
+- let create .env file in the root folder to setup the environment variables
+- open package.json file to configure the scripts object from this 
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+to this
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+}
+
+- let setup main.js file with basic structure of backend server
+- let setup the backend server like this
+C:\restaurant-website-Ejs2023>npm run dev
+server running at http://localhost:2000
+
+- let setup our mongodb connection to our application
+- By creating a new database project on mongodb atlas 
+- then connect our application with it and copy the url connection
+- let setup our mongodb connection on main.js file 
+
+let add middlewares 
+- middlewares are functions with three arguments namely req, res and next()
+app.use(express.urlencoded({ extended: false })) //it enables user to send and receive data from frontend to backend
+app.use(express.json()) //send information from javascript format to json format to be reable in our server application
+app.use(session({
+    secret: 'mysecret ejs',
+    saveUninitialized: true,
+    resave: false,
+}))
+
+//for saving session message onto the req object
+app.use((req, res, next) => {
+    res.locals.message = req.session.message;
+    delete req.session.message;
+    next();
+});
+
+// set the template engines which is EJS
+app.set('view engine', 'ejs')
+
+- create router folder inside the root folder 
+- create router.js file inside routes folder to write all the routes or apis
+- create models folder in the root folder, it will contain the ODM (Object Data Modelling)
+- create admin.js file inside models folder to describe the structure of our dmin mongodb
+- create menu.js file inside models folder to describe the structure of our menu mongodb
+- create order.js file inside models folder to describe the structure of our order mongodb
+- let setup models/menu.js file
+- let setup models/admin.js file
+- let setup models/order.js file
+- let setup router/router.js file
+
+- remove this api from main.js backend server
+app.get('/', (req, res)=> {
+    res.send('Hello world');
+});
+- let import our router into the main.js file 
+const routes = require('./router/router.js');
+- and use it like this
+app.use('/', routes);
+- let test our app on the browser
+
+- create a view folder for our ejs structure
+- create a layout folder in view folder for main file for the layout of the website like this
+view/layout/index.ejs
+- create index file to code what will be inside the body of the website
+
+- create a public folder for the images and styling, javascript and images
+- how let start coding in side our ejs 
+- then before anything type this on our index.js
+app.use(express.static(path.join(__dirname, './public')));
+- this is where our ejs will locate what is inside our public folder
+- and now let check our website the styling, javascript and images will be working perfectly fine 
+
+- let setup our mongodb connection to our application
+- By creating a new database project on mongodb atlas 
+- then connect our application with it and copy the url connection
+- let setup our mongodb connection on index.js file
+
+mongoose.connect(process.env.DB_ATLAS, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+})
+
+const db = mongoose.connection;
+db.on("error", (error) => console.log(error));
+db.once("open", ()=> console.log("Connected to mongodb"));
+- if connected successfully let move to the next agenda
+
+- Now let work on our signup and signin page on our website
+- firstly we need to work on our models/admin.js to setup the collection that will be saved on our mongodb
+- After that we move to views folder to create a signin.ejs and signup.ejs page input field in it
+- We need to style our form input field for it to be presentable so move to style.css as well
+- Then we move back to our router to implement and write the request and response that will be needed for the action coming from the signup.ejs and signin.ejs
+like this
+router.post('/signup', (req, res)=> {
+    const admin = new Admin({
+        firstname: req.body.firstname,
+        surname: req.body.surname,
+        email: req.body.email,
+        password: req.body.password
+    });
+
+    admin.save((err)=>{
+        if(err){
+            console.log(err)
+        }else{
+            console.log(admin)
+            res.redirect('/signin')
+        }
+    })
+})
+
+
+router.get('/signup', (req, res)=>{
+    res.render('signup', {title: 'Admin Signup'})
+})
+
+router.post('/signin', async(req, res)=>{
+    const signinAdmin = await Admin.findOne({
+        email: req.body.email,
+        password: req.body.password
+    })
+    console.log("Signin Admin: ", signinAdmin);
+    if(!signinAdmin){
+        res.status(401).send({ message: "Invalid Email or Password" });
+    }else{
+        res.redirect('/addmenu')
+    }
+})
+
+router.get('/signin', (req, res)=>{
+    res.render('signin', {title: 'Admin Login'})
+})
+
+- Our next agenda is to be fetching our menu from database so firstly
+- let modify our models/menu with the documents needed for the menus collection
+enum: ['Breakfast', 'Lunch', 'Dinner', 'Drinks','Dessert'],
+- this above means that these are the only category that will be used on the menu tab 
+- then we code the neccessary input field that is needed for 
+- so we need to create a file named add-menu.ejs in the views folder to code the needed input field 
+- after we need to style the class selector for our application to look good
+- now we need to go back router to create the request and response to the action
+- firstly we need to install multer and cloudinary for file upload
+- after we have to setup over cloudinary like this by creating a folder called utils
+- then create a file called cloudinary.js for the configuration of our cloudinary
+- after that we move to our router to import this following
+const Menu = require('../models/menu');
+const cloudinary = require('../utils/cloudinary')
+const multer = require('multer');
+- then we now need create the request and response functionality for the addmenu.ejs
+So now we test our localhost:2000/addmenu if it working fine and pushing to mongodb then we now work on the 
+way we will be fething it from mongodb to our homepage by doing this in our router.js file 
+router.get('/', async (req, res)=> {
+    try{
+        const limitNumber = 7;
+        const breakfast = await Menu.find({ 'category': 'Breakfast' }).limit(limitNumber);
+        const lunch = await Menu.find({ 'category': 'Lunch' }).limit(limitNumber);
+        const dinner = await Menu.find({ 'category': 'Dinner' }).limit(limitNumber);
+        const drink = await Menu.find({ 'category': 'Drinks' }).limit(limitNumber);
+        const dessert = await Menu.find({ 'category': 'Dessert' }).limit(limitNumber);
+
+        const food = { breakfast, lunch, dinner, drink, dessert };
+    res.render('index', {title: 'Restaurant Website' , food: food})
+    }catch(err){
+        res.json({ message: err.message })
+    }
+})
+-so it will fetch all the food based on their category and then add this our index.ejs file so that our menu
+will be fetching from mongodb
+                <div class="swiper-slide slide">
+                <h3 class="title">breakfast</h3>
+                <div class="box-container">
+                <% if(typeof food.breakfast !== 'undefined' && food.breakfast.length > 0){ %>
+                    <% food.breakfast.forEach(function(menu, index){ %>
+                        <div class="box">
+                            <div class="info">
+                                <img src="<%= menu.image %>" alt="<%= menu.name %>">
+
+                                <p class="price"><%= menu.desc %></p>
+                            </div>
+                            <div class="item">
+                                <h3><%= menu.name %></h3>
+                                <p>
+                                    <%= menu.price %>
+                                </p>
+                            </div>
+                        </div> 
+                <% }) %>
+                <% } %>
+                </div>
+            </div>
+- and we will do this to rest of item which are the lunch, drinks, dinner and desserts
+- and we need to change so thing in the menu style
+
+- Now to our Admin page where will be able to add menu, edit menu and delete menu
+- We will be using Bootstrap for easy styling of our admin page
+- So let get started by creating an admin.ejs file in the views folder
+- let setup views/admin.ejs file
+
+- inorder to view our admin.ejs file on the broser we need this
+router.get('/admin', async (req, res)=> {
+    try{
+        const foods = await Menu.find();
+        res.render('admin', {title: 'Admin Page' , foods: foods})
+    }catch(err){
+        res.json({ message: err.message })
+    }
+})
+
+- google search cdn.js com click on cdnjs - The #1 free and open source CDN built to make life ... 
+- search for Bootstrap, click on twitter-Bootstrap
+- copy this link tag
+https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css
+- paste it right after the title tags inside admin.ejs
+- copy this script tag
+https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js
+- paste it right before the closing body tags
+
+
+
+
+CONNECT MONGODB TO GOOGLE SHEET USING MONGODB ATLAS APP SERVICE AND GOOGLE APP SCRIPT
+- Firstly let create a google form linking it to google sheets 
+- Then let move back to mongodb clicking on Atlas App Services 
+- Click on Create a New App
+- Application Name: Google
+- Linking your database: select Cluster0
+- Advanced Configuration
+- Click on Global because we are connecting to another external application which is Google sheets
+- Region chosen based on your cluster's region: Virginia (us-east-1) • AWS
+- Click on Create App Service
+- APp Endpoint
+- Route: /webhook
+- HTTP Method: Get
+- Response With Result: ON
+- Click on New Function
+- Function Name: webgoogle
+- Function
+exports = function(payload){
+  const mongodb = context.services.get('mongodb-atlas');
+  const collection = mongodb.db("resturantdb").collection("orders");
+  return collection.find({}).toArray();
+};
+- click run on the function to be sure if d function is fetching the collection in the db
+- You will see a result like this if it successful
+> ran at 1682516402050
+> took 1.840081042s
+> result: 
+[
+  {
+    "_id": {
+      "$oid": "6447930e5c4eeb0340572e8f"
+    },
+    "fullname": "Hameedah Orimadegun",
+    "foodname": "Pizza",
+    "details": "Pizza and sauce",
+    "address": "51B, Okepopo Street, Lagos Island, Lagos",
+    "email": "orishameedah@gmail.com",
+    "phone": "09122427432",
+    "date": {
+      "$date": {
+        "$numberLong": "1680684240000"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64484155ae2b793b60059f8f"
+    },
+    "fullname": "Ade Kunle",
+    "foodname": "Burger",
+    "details": "Fresh fried meat and cheese",
+    "address": "St. Nicholas, Lagos",
+    "email": "adeakin@gmail.com",
+    "phone": "09876664774",
+    "date": {
+      "$date": {
+        "$numberLong": "1682543280000"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  }
+]
+> result (JavaScript): 
+EJSON.parse('[{"_id":{"$oid":"6447930e5c4eeb0340572e8f"},"fullname":"Hameedah Orimadegun","foodname":"Pizza","details":"Pizza and sauce","address":"51B, Okepopo Street, Lagos Island, Lagos","email":"orishameedah@gmail.com","phone":"09122427432","date":{"$date":{"$numberLong":"1680684240000"}},"__v":{"$numberInt":"0"}},{"_id":{"$oid":"64484155ae2b793b60059f8f"},"fullname":"Ade Kunle","foodname":"Burger","details":"Fresh fried meat and cheese","address":"St. Nicholas, Lagos","email":"adeakin@gmail.com","phone":"09876664774","date":{"$date":{"$numberLong":"1682543280000"}},"__v":{"$numberInt":"0"}}]')
+
+- click on save draft
+- click on next to deploy it by clicking review and deploy
+- then it will say deployment was successful!.
+- But before going to your google app sheet you need to change the settings of the authentication from 
+- Application Authentication to System So that you will not have issues will connecting your mongodb to an external application
+- To do that Navigate to the Functions tab under the Build tab then click on the current function you are working on
+- the click on settings to change it from Application Authentication to System
+- then click on Save as draft
+- then click on review and deploy again the deploy the current changes made to your function
+- then it will say deployment was successful!.
+
+- Now to the google sheet you want to link your mongodb to 
+- Go to the Google Sheet 
+- Create the neccessary columns that will represent your data
+- Click on Extensions, then click on App Script 
+- Then it will redirect you to a new tab to write the code for fetching the data from mongoDB
+- After that rename Utitled Name to MongoDB Connection
+- Then click on the plus sign besides the names Files to create a Script file 
+- So click on SCRIPT to create a new file called ImportData.gs
+- No let start writing the code that we will use to fetch information from MongoDB Connection
+function connectToMongoDB() {
+  var sh1 = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Form responses 1")
+  var getData = UrlFetchApp.fetch('https://data.mongodb-api.com/app/google-ywhpx/endpoint/webhook').getContentText()
+  var jsonObj = JSON.parse(getData)
+  for(var i=0; i<jsonObj.length; i++){
+    sh1.getRange(i+2, 1).setValue(jsonObj[i].createdTimestamp);
+    sh1.getRange(i+2, 2).setValue(jsonObj[i]._id);
+    sh1.getRange(i+2, 3).setValue(jsonObj[i].fullname);
+    sh1.getRange(i+2, 4).setValue(jsonObj[i].foodname);
+    sh1.getRange(i+2, 5).setValue(jsonObj[i].details);
+    sh1.getRange(i+2, 6).setValue(jsonObj[i].address);
+    sh1.getRange(i+2, 7).setValue(jsonObj[i].email);
+    sh1.getRange(i+2, 8).setValue(jsonObj[i].phone);
+    sh1.getRange(i+2, 9).setValue(jsonObj[i].quantity);
+    sh1.getRange(i+2, 10).setValue(jsonObj[i].date);
+  }
+}
+- Click on the Run tab to see the execution
+- Then click on the triggers tab to automatically update the sheet
+
+- Deploying to github
+- C:\restaurant-website-Ejs2023> git --version
+- C:\restaurant-website-Ejs2023> git init
+- C:\restaurant-website-Ejs2023> git status
+- C:\restaurant-website-Ejs2023> git add .
+- C:\restaurant-website-Ejs2023> git --version

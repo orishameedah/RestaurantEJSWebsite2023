@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("layout/header") %>
+<body>
+        <!-- header section start -->
+            <section class="header">
+                <a href="/admin-order" class="logo"><i class="fas fa-utensils"></i>Order.</a>
+                <!-- <nav class="navbar">
+                    <a href="/admin">Admin</a>
+                </nav>
+        
+                <div id="menu-btn" class="fas fa-bars"></div> -->
+            </section>
+        <!-- header section end -->
+    <div class="menuform">
+        <h1 class="menu-title">Edit Order</h1>
+        <div class="addmenu">
+            <form action="/updateorder/<%= order._id %>" method="post" class="formmenu">
+                    <div class="input-group w50">
+                        <label for="fullname">Full Name</label>
+                        <input 
+                            type="name" 
+                            name="fullname" 
+                            class="input-control" 
+                            placeholder="Food Name"
+                            value="<%= order.fullname %>"
+                        />
+                    </div>
+
+                    <div class="input-group w50">
+                        <label for="foodname">Food Name</label>
+                        <input 
+                            type="name" 
+                            class="input-control" 
+                            name="foodname" 
+                            placeholder="Food Name"
+                            value="<%= order.foodname %>"
+                            />
+                    </div> 
+                    
+                    <div class="input-group w50">
+                        <label for="details">Order Details</label>
+                        <input 
+                            type="name" 
+                            class="input-control" 
+                            name="details" 
+                            placeholder="Order Details"
+                            value="<%= order.details %>"
+                            />
+                    </div> 
+
+                    <div class="input-group w50">
+                        <label for="address">Address</label>
+                        <input 
+                            type="name" 
+                            class="input-control" 
+                            name="address" 
+                            placeholder="Address"
+                            value="<%= order.address %>"
+                            />
+                    </div> 
+
+                    <div class="input-group w50">
+                        <label for="email">Email</label>
+                        <input 
+                            type="email" 
+                            class="input-control" 
+                            name="email" 
+                            placeholder="Email"
+                            value="<%= order.email %>"
+                            />
+                    </div> 
+
+                    <div class="input-group w50">
+                        <label for="phone">Phone Number</label>
+                        <input 
+                            type="name" 
+                            class="input-control" 
+                            name="phone" 
+                            placeholder="Phone Number"
+                            value="<%= order.phone %>"
+                            />
+                    </div>
+                    
+                    <div class="input-group w50">
+                        <label for="quantity">Quantity</label>
+                        <input 
+                            type="name" 
+                            class="input-control" 
+                            name="quantity" 
+                            placeholder="Quantity"
+                            value="<%= order.quantity %>"
+                            />
+                    </div>
+
+                    <div class="input-group w50">
+                        <label for="date">Date</label>
+                        <input 
+                            type="datetime-local"
+                            class="input-control" 
+                            name="date" 
+                            placeholder="Date"
+                            value="<%= order.date %>"
+                            />
+                    </div>
+
+                    <div class="input-group">
+                        <button type="submit" class="btn-1" >Update Menu</button>
+                    </div>
+       
+            </form>
+        </div>
+    </div>
+</body>
+</html>
