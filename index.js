@@ -34,33 +34,33 @@ const path = require('path')
 const app = express();
 const PORT = process.env.PORT || 6000;
 
-// mongoose.connect(process.env.DB_ATLAS, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useFindAndModify: false,
-// })
+mongoose.connect(process.env.DB_ATLAS, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+})
 
-// const db = mongoose.connection;
-// db.on("error", (error) => console.log(error));
-// db.once("open", ()=> console.log("Connected to mongodb"));
+const db = mongoose.connection;
+db.on("error", (error) => console.log(error));
+db.once("open", ()=> console.log("Connected to mongodb"));
 
-mongoose.connect(
-  process.env.DB_ATLAS,
-  options,
-  (err) => {
-   if(err) console.log(err) 
-   else console.log("mongdb is connected");
-  }
-);
+// mongoose.connect(
+//   process.env.DB_ATLAS,
+//   options,
+//   (err) => {
+//    if(err) console.log(err) 
+//    else console.log("mongdb is connected");
+//   }
+// );
 
-// or
+// // or
 
-mongoose.connect(
-  process.env.DB_ATLAS,
-  options
-)
-.then(()=>console.log('connected'))
-.catch((e)=>console.log(e))
+// mongoose.connect(
+//   process.env.DB_ATLAS,
+//   options
+// )
+// .then(()=>console.log('connected'))
+// .catch((e)=>console.log(e))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
